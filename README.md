@@ -8,7 +8,7 @@ Développer un logiciel libre d'imagerie pour l'aide à la lecture, et la vision
 
 ## Tâches réalisées
 
-## Tâche à faire
+## Tâches à faire
 - [ ] Design du support - Responsable : AmarOk
 - [ ] Modélisation du support - Responsable : Indéfini
 - [ ] Réalisation de la boite de controle - Responsable : AmarOk ?
