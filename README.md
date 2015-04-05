@@ -25,16 +25,21 @@ Développer un logiciel libre d'imagerie pour l'aide à la lecture, et la vision
 - [ ] Design du support - Responsable : AmarOk
 - [ ] Modélisation du support - Responsable : Indéfini
 - [ ] Réalisation de la boite de controle - Responsable : AmarOk ?
-- [ ] Partie logicielle - Responsable : AmarOk
+- [ ] Partie logicielle - Responsable : AmarOk (consultant archi/OpenCV: Ksamak)
      - [X] Récupération d'une caméra
      - [ ] Compatibilité multi caméras
+     - [ ] reverse engineering d'un modèle (selon dispo)
      - [X] Zoom
      - [X] Inversion de couleurs
      - [X] Changement de palette de couleur
+     - [ ] Autres algos (contrast intelligent, detection de contours)
 Note d'AmarOk : J'ai déjà du code pour faire de nombreux points au dessus. Je m'occupe de faire ça plus proprement.
+     - [ ] Réaliser une archi propre
      - [ ] Réaliser un code propre
      - [ ] Documenter
+     - [X] Traductions (Ksamak)
      - [ ] Algorithme de groupement de texte
+     - [ ] analyse structurelle de documents
      - [ ] OCR
 
 # English Version
