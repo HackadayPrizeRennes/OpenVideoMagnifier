@@ -33,7 +33,6 @@ Développer un logiciel libre d'imagerie pour l'aide à la lecture, et la vision
      - [X] Inversion de couleurs
      - [X] Changement de palette de couleur
      - [ ] Autres algos (contrast intelligent, detection de contours)
-Note d'AmarOk : J'ai déjà du code pour faire de nombreux points au dessus. Je m'occupe de faire ça plus proprement.
      - [ ] Réaliser une archi propre
      - [ ] Réaliser un code propre
      - [ ] Documenter
@@ -41,6 +40,3 @@ Note d'AmarOk : J'ai déjà du code pour faire de nombreux points au dessus. Je 
      - [ ] Algorithme de groupement de texte
      - [ ] analyse structurelle de documents
      - [ ] OCR
-
-# English Version
-Soon
