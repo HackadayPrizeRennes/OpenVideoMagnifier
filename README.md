@@ -1,7 +1,22 @@
 # OpenVideoMagnifier
-An open source video magnifier
+The Open Source Video Magnifier project
 
-# Version française (English version at bottom)
+# English (version française plus bas)
+
+## Objectives
+This project is about developing free (as in freedom) imagery software and harware for visually deficient people. The software should be able to interface with video cameras.
+Main Goals:
+    - Zoom in on text, invert colors, adapt to color blindness.
+    - provide open hardware schematics for building easy to use generic camera stand hardware.
+Additionnal features:
+    - use Optical Character Recognition (OCR) to read aloud selected text.
+    - Adapt to already existing specialized cameras
+    - structural analysis of documents
+    - external remote control
+
+([example of specialised camera] (http://www.tousergo.com/loupe-basse-vision/2481-teleagrandisseur-connectable-transformer.html))
+
+# Français
 
 ## Description
 Développer un logiciel libre d'imagerie pour l'aide à la lecture, et la vision en général et d'un support de caméra pliable ([exemple](http://www.tousergo.com/loupe-basse-vision/2481-teleagrandisseur-connectable-transformer.html)). Il sera possible de zoomer sur le texte, inverser les couleurs, ou changer de palette de couleurs accessible via une boite de controle. De plus, un OCR sera fournit. Enfin, le logiciel doit pouvoir s'adapter aux caméras standard.
