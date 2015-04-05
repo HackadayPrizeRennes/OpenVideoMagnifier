@@ -5,10 +5,10 @@ The Open Source Video Magnifier project
 
 ## Objectives
 This project is about developing free (as in freedom) imagery software and harware for visually deficient people. The software should be able to interface with video cameras.
-Main Goals:
+### Main Goals:
 - Zoom in on text, invert colors, adapt to color blindness.
 - provide open hardware schematics for building easy to use generic camera stand hardware.
-additionnal features:
+### additionnal features:
 - use Optical Character Recognition (OCR) to read aloud selected text.
 - Adapt to already existing specialized cameras
 - structural analysis of documents
