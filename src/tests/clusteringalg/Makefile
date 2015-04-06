@@ -5,7 +5,7 @@ CXXFLAGS = -c -Wall -ggdb $(INC) -std=c++11
 LDFLAGS  = $(LIBS) -ldl
 SRC = $(wildcard *.cpp)
 OBJ	 = $(patsubst %.cpp,%.o,$(SRC))
-EXEC	 = ../bin/clusterize
+EXEC	 = clusterize
 
 all : $(EXEC)
 
