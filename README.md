@@ -13,6 +13,8 @@ This project is about developing free (as in freedom) imagery software and harwa
 - Adapt to already existing specialized cameras
 - structural analysis of documents
 - external remote control
+- Multiplatform implementation (include windows)
+- Multiarchitecture implementation (armf?)
 
 ([example of specialised camera] (http://www.tousergo.com/loupe-basse-vision/2481-teleagrandisseur-connectable-transformer.html))
 
