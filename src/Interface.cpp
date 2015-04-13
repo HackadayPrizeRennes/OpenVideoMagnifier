@@ -1,5 +1,9 @@
 #include "Interface.h"
 
+#include <stdlib.h>     /* srand, rand */
+#include <time.h>       /* time */
+#include "ClusterizeImage.h"
+
 Interface::Interface() : _invert(false), _balance(true), _zoom(1)
 {
 	run();
@@ -51,6 +55,39 @@ cv::Mat Interface::balanceFilter(const cv::Mat& src, const std::array<float,3>& 
     }
     merge(tmpsplit,out);
     return out;
+}
+
+cv::Mat Interface::kmeans(const cv::Mat& src, unsigned int nbClusters)
+{
+  srand (time(NULL));
+
+  cv::Mat base = src;
+  cv::Mat res(base.size(), CV_8UC3, cv::Scalar(0, 0, 0));
+  std::vector<cv::Point> points;
+ 
+  for( int y = 0; y < base.rows; y++ )
+    for( int x = 0; x < base.cols; x++ )
+      if(base.at<char>(x,y) >= 100)
+        points.push_back(cv::Point(y,x));
+
+	std::vector<unsigned int> labels;
+	std::vector<cv::Point> centers;
+
+	ClusterizeImage clusterIm;
+	clusterIm.kmeans(points, nbClusters, labels, 20, centers, base);
+
+	std::vector<cv::Scalar> colors;
+	for(unsigned int i = 0; i < nbClusters; ++i)
+	{
+		colors.push_back(cv::Scalar(rand()%255+1, rand()%255+1, rand()%255+1));
+		circle(res, centers[i], 5, colors.at(i), 1);
+	}
+
+	for(unsigned int i = 0; i < points.size(); ++i)
+		circle(res, points[i], 3, colors.at(labels[i]));
+
+  cv::imwrite("out.png", res);
+  return res;
 }
 
 void Interface::run()
