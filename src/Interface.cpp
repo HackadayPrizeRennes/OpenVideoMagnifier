@@ -2,9 +2,10 @@
 
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
+ 
 #include "ClusterizeImage.h"
 
-Interface::Interface() : _invert(false), _balance(true), _zoom(1)
+Interface::Interface() : _invert(false), _balance(true), _zoom(1), _saturation(0)
 {
 	run();
 }
@@ -90,6 +91,20 @@ cv::Mat Interface::kmeans(const cv::Mat& src, unsigned int nbClusters)
   return res;
 }
 
+cv::Mat Interface::saturate(const cv::Mat& src, const int saturateValue)
+{
+	cv::Mat out;
+	cv::cvtColor(src, out, CV_BGR2HSV);
+
+	for(int i = 0; i < out.rows ; i++)
+		for(int j = 0; j < out.cols; j++)
+			out.at<cv::Vec3b>(i,j)[1] += saturateValue;
+
+	cv::cvtColor(out, out, CV_HSV2BGR);
+
+	return out;
+}
+
 void Interface::run()
 {
 	cv::VideoCapture cap(0);
@@ -97,7 +112,7 @@ void Interface::run()
 	assert(cap.isOpened());
 
 	cvNamedWindow("Camera", CV_WINDOW_NORMAL) ;
-	cvSetWindowProperty("Camera", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
+	//cvSetWindowProperty("Camera", CV_WND_PROP_FULLSCREEN, CV_WINDOW_FULLSCREEN);
 
 	bool close = false;
 	while(!close)
@@ -116,6 +131,7 @@ void Interface::run()
 			frame = balanceFilter(frame, percent);
 		if(_invert)
 			frame = invertFilter(frame);
+		frame = saturate(frame, _saturation);
 		frame = zoomFilter(frame,_zoom);
 		
 		cv::imshow("Camera", frame);
@@ -128,6 +144,12 @@ void Interface::run()
 			_balance = !_balance;
 		if(c == 'p')
 			_zoom*=2;
+		if(c == 's')
+			_saturation += 1;
+		if(c == 'q')
+			_saturation -= 1;
+		if(c == 'z')
+			_saturation = 0;
 		if(c == 'm' && _zoom > 1)
 			_zoom/=2;
 		if(c == 27)

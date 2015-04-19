@@ -16,12 +16,14 @@ public:
 	cv::Mat zoomFilter(const cv::Mat& src, const unsigned int zoom) const;
 	cv::Mat balanceFilter(const cv::Mat& src, const std::array<float,3>& percent);
 	cv::Mat kmeans(const cv::Mat& src, unsigned int nbClusters);
+	cv::Mat saturate(const cv::Mat& src, const int saturateValue);
 
 	void run();
 private:
 	bool _invert;
 	bool _balance;
 	unsigned int _zoom;
+	int _saturation;
 };
 
 #endif
