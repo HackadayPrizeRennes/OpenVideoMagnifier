@@ -17,6 +17,7 @@ public:
 	cv::Mat balanceFilter(const cv::Mat& src, const std::array<float,3>& percent);
 	cv::Mat kmeans(const cv::Mat& src, unsigned int nbClusters);
 	cv::Mat saturate(const cv::Mat& src, const int saturateValue);
+	void saveConfig();
 
 	void run();
 private:

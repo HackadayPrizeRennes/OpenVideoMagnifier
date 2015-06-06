@@ -76,7 +76,7 @@ int main( int argc, char** argv )
 
 	std::vector<unsigned int> labels;
 	std::vector<cv::Point> centers;
-	kmeansPerso(points, 3, labels, 20, centers, src);
+	kmeansPerso(points, 4, labels, 20, centers, src);
 
 	circle(res, centers[0], 5, cv::Scalar(255,0,0),1);
 	circle(res, centers[1], 5, cv::Scalar(0,255,0),1);
@@ -97,5 +97,6 @@ int main( int argc, char** argv )
 
   cv::imshow( "Base", src);
   cv::imshow( "Final", res);
+  cv::imwrite("out.png", res);
   cv::waitKey(0);
 }

@@ -2,11 +2,29 @@
 
 #include <stdlib.h>     /* srand, rand */
 #include <time.h>       /* time */
- 
+#include <iostream>
+#include <fstream>
+#include <string.h>
+
 #include "ClusterizeImage.h"
 
 Interface::Interface() : _invert(false), _balance(true), _zoom(1), _saturation(0)
 {
+	std::ifstream confFile("ovm.conf");
+	if(confFile.is_open())
+	{
+		std::string line;
+		std::getline(confFile,line);
+		_invert = std::atoi(line.c_str());
+		std::getline(confFile,line);
+		_balance = std::atoi(line.c_str());
+		std::getline(confFile,line);
+		_zoom = std::atoi(line.c_str());
+		if(_zoom < 1) _zoom = 1;
+		std::getline(confFile,line);
+		_saturation = std::atoi(line.c_str());
+		confFile.close();
+	}
 	run();
 }
 
@@ -144,7 +162,7 @@ void Interface::run()
 			_balance = !_balance;
 		if(c == 'p')
 			_zoom*=2;
-		if(c == 's')
+		if(c == 'd')
 			_saturation += 1;
 		if(c == 'q')
 			_saturation -= 1;
@@ -152,7 +170,20 @@ void Interface::run()
 			_saturation = 0;
 		if(c == 'm' && _zoom > 1)
 			_zoom/=2;
-		if(c == 27)
+    if(c == 's')
+      saveConfig();
+    if(c == 27)
 			close = true;
 	}
+}
+
+void Interface::saveConfig()
+{
+  std::ofstream configFile;
+  configFile.open ("ovm.conf");
+  configFile << _invert << std::endl
+             << _balance << std::endl
+             << _zoom << std::endl
+             << _saturation << std::endl;
+  configFile.close();
 }
