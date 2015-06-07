@@ -19,6 +19,9 @@ public:
 	cv::Mat saturate(const cv::Mat& src, const int saturateValue);
 	void saveConfig();
 
+	//Callback
+	void invert(int state, void *pointer);
+
 	void run();
 private:
 	bool _invert;
