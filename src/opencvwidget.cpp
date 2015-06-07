@@ -1,12 +1,42 @@
 #include "opencvwidget.h"
 
-// Constructor
 QOpenCVWidget::QOpenCVWidget(QWidget *parent) : QWidget(parent) {
-    //setFixedSize(300, 300);
-    layout = new QVBoxLayout;
     imagelabel = new QLabel;
-    layout->addWidget(imagelabel);
-    setLayout(layout);
+
+    _mainLayout = new QHBoxLayout;
+    _controlLayout = new QVBoxLayout;
+        _invert = new QPushButton("Inverser");
+        _invert->setMaximumWidth(200);
+        _controlLayout->addWidget(_invert);
+        QObject::connect(_invert, SIGNAL(clicked()), this, SLOT(invertSlot()));
+        _balance = new QPushButton("Balance des blancs");
+        _balance->setMaximumWidth(200);
+        _controlLayout->addWidget(_balance);
+        QObject::connect(_balance, SIGNAL(clicked()), this, SLOT(balanceSlot()));
+        _zoomP = new QPushButton("Zoom x2");
+        _zoomP->setMaximumWidth(200);
+        _controlLayout->addWidget(_zoomP);
+        QObject::connect(_zoomP, SIGNAL(clicked()), this, SLOT(zoomPSlotl()));
+        _zoomM = new QPushButton("Zoom /2");
+        _zoomM->setMaximumWidth(200);
+        _controlLayout->addWidget(_zoomM);
+        QObject::connect(_zoomM, SIGNAL(clicked()), this, SLOT(zoomMSlot()));
+        _saturationP = new QPushButton("Saturation +1");
+        _saturationP->setMaximumWidth(200);
+        _controlLayout->addWidget(_saturationP);
+        QObject::connect(_saturationP, SIGNAL(clicked()), this, SLOT(saturationPSlot()));
+        _saturationM = new QPushButton("Saturation -1");
+        _saturationM->setMaximumWidth(200);
+        _controlLayout->addWidget(_saturationM);
+        QObject::connect(_saturationM, SIGNAL(clicked()), this, SLOT(saturationMSlot()));
+        _save = new QPushButton("Sauvegarde");
+        _save->setMaximumWidth(200);
+        _controlLayout->addWidget(_save);
+        QObject::connect(_save, SIGNAL(clicked()), this, SLOT(saveSlot()));
+
+    _mainLayout->addWidget(imagelabel);
+    _mainLayout->addLayout(_controlLayout);
+    setLayout(_mainLayout);
 }
 
 QOpenCVWidget::~QOpenCVWidget(void) {
@@ -53,3 +83,39 @@ QImage QOpenCVWidget::getImageLabel()
 {
     return imagelabel->pixmap()->toImage();
 }
+
+void QOpenCVWidget::invertSlot()
+{
+    emit invertSignal();
+}
+
+void QOpenCVWidget::balanceSlot()
+{
+    emit balanceSignal();
+}
+
+void QOpenCVWidget::zoomPSlotl()
+{
+    emit zoomPSignal();
+}
+
+void QOpenCVWidget::zoomMSlot()
+{
+    emit zoomMSignal();
+}
+
+void QOpenCVWidget::saturationPSlot()
+{
+    emit saturationPSignal();
+}
+
+void QOpenCVWidget::saturationMSlot()
+{
+    emit saturationMSignal();
+}
+
+void QOpenCVWidget::saveSlot()
+{
+    emit saveSignal();
+}
+

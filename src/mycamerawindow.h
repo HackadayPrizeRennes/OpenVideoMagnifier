@@ -12,8 +12,9 @@
 #include <array>
 #include <QtGui>
 
-
-
+/**
+ * @brief The MyCameraWindow class
+ */
 class MyCameraWindow : public QWidget
 {
     Q_OBJECT
@@ -33,11 +34,19 @@ class MyCameraWindow : public QWidget
         cv::Mat balanceFilter(const cv::Mat& src, const std::array<float,3>& percent);
         cv::Mat kmeans(const cv::Mat& src, unsigned int nbClusters);
         cv::Mat saturate(const cv::Mat& src, const int saturateValue);
+
+    public slots:
+        void invertClicked();
+        void zoomPClicked();
+        void zoomMClicked();
+        void balanceClicked();
+        void saturePClicked();
+        void satureMClicked();
         void saveConfig();
 
     protected:
         void timerEvent(QTimerEvent*);
-        void resizeEvent(QResizeEvent* event);
+        void resizeEvent(QResizeEvent*);
         void keyPressEvent(QKeyEvent *event);
 };
 

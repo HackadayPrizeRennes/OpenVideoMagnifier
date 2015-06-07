@@ -26,6 +26,14 @@ MyCameraWindow::MyCameraWindow(CvCapture *cam, QWidget *parent) : QWidget(parent
     camera = cam;
     cvwidget = new QOpenCVWidget(this);
     cvwidget->setFixedSize(this->width(), this->height());
+    QObject::connect(cvwidget, SIGNAL(balanceSignal()), this, SLOT(balanceClicked()));
+    QObject::connect(cvwidget, SIGNAL(invertSignal()), this, SLOT(invertClicked()));
+    QObject::connect(cvwidget, SIGNAL(zoomMSignal()), this, SLOT(zoomMClicked()));
+    QObject::connect(cvwidget, SIGNAL(zoomPSignal()), this, SLOT(zoomPClicked()));
+    QObject::connect(cvwidget, SIGNAL(saturationMSignal()), this, SLOT(satureMClicked()));
+    QObject::connect(cvwidget, SIGNAL(saturationPSignal()), this, SLOT(saturePClicked()));
+    QObject::connect(cvwidget, SIGNAL(saveSignal()), this, SLOT(saveConfig()));
+
     startTimer(100);
 }
 
@@ -50,7 +58,7 @@ void MyCameraWindow::timerEvent(QTimerEvent*) {
 }
 
 
-void MyCameraWindow::resizeEvent(QResizeEvent* event)
+void MyCameraWindow::resizeEvent(QResizeEvent*)
 {
     cvwidget->setFixedSize(this->width(), this->height());
 }
@@ -58,21 +66,53 @@ void MyCameraWindow::resizeEvent(QResizeEvent* event)
 void MyCameraWindow::keyPressEvent(QKeyEvent *event)
 {
     if(event->key() == Qt::Key_I)
-        _invert = !_invert;
+        invertClicked();
     if(event->key() == Qt::Key_B)
-        _balance = !_balance;
+        balanceClicked();
     if(event->key() == Qt::Key_P)
-        _zoom*=2;
+        zoomPClicked();
     if(event->key() == Qt::Key_D)
-        _saturation += 1;
+        saturePClicked();
     if(event->key() == Qt::Key_Q)
-        _saturation -= 1;
+        satureMClicked();
     if(event->key() == Qt::Key_Z)
         _saturation = 0;
-    if(event->key() == Qt::Key_M && _zoom > 1)
-        _zoom/=2;
+    if(event->key() == Qt::Key_M)
+        zoomMClicked();
     if(event->key() == Qt::Key_S)
         saveConfig();
+}
+
+
+void MyCameraWindow::invertClicked()
+{
+    _invert = !_invert;
+}
+
+void MyCameraWindow::zoomPClicked()
+{
+    _zoom *= 2;
+}
+
+void MyCameraWindow::zoomMClicked()
+{
+    if(_zoom > 1)
+        _zoom /= 2;
+}
+
+void MyCameraWindow::balanceClicked()
+{
+    _balance = !_balance;
+}
+
+void MyCameraWindow::saturePClicked()
+{
+    _saturation += 1;
+}
+
+void MyCameraWindow::satureMClicked()
+{
+    _saturation -= 1;
 }
 
 cv::Mat MyCameraWindow::invertFilter(const cv::Mat& src) const
