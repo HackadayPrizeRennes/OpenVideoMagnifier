@@ -7,6 +7,7 @@
 #include <string.h>
 
 MyCameraWindow::MyCameraWindow(CvCapture *cam, QWidget *parent) : QWidget(parent), _invert(false), _balance(true), _zoom(1), _saturation(0) {
+    //load the config
     std::ifstream confFile("ovm.conf");
     if(confFile.is_open())
     {
@@ -23,6 +24,7 @@ MyCameraWindow::MyCameraWindow(CvCapture *cam, QWidget *parent) : QWidget(parent
         confFile.close();
     }
 
+    //initialize the OpenCVWidget
     camera = cam;
     cvwidget = new QOpenCVWidget(this);
     cvwidget->setFixedSize(this->width(), this->height());
@@ -34,13 +36,16 @@ MyCameraWindow::MyCameraWindow(CvCapture *cam, QWidget *parent) : QWidget(parent
     QObject::connect(cvwidget, SIGNAL(saturationPSignal()), this, SLOT(saturePClicked()));
     QObject::connect(cvwidget, SIGNAL(saveSignal()), this, SLOT(saveConfig()));
 
+    //timer between each capture
     startTimer(100);
 }
 
+/**
+ * refresh the QOpenCVWidget
+ */
 void MyCameraWindow::timerEvent(QTimerEvent*) {
     IplImage *image=cvQueryFrame(camera);
     cv::Mat frame(image);
-
 
     std::array<float, 3> percent{ {1, 1, 1} };
     if(_balance)
@@ -57,12 +62,17 @@ void MyCameraWindow::timerEvent(QTimerEvent*) {
     cvwidget->putImage(image2);
 }
 
-
+/**
+ * if we resize the window
+ */
 void MyCameraWindow::resizeEvent(QResizeEvent*)
 {
     cvwidget->setFixedSize(this->width(), this->height());
 }
 
+/**
+ * If a key is pressed
+ */
 void MyCameraWindow::keyPressEvent(QKeyEvent *event)
 {
     if(event->key() == Qt::Key_I)
@@ -83,7 +93,9 @@ void MyCameraWindow::keyPressEvent(QKeyEvent *event)
         saveConfig();
 }
 
-
+/**
+ * React to some signals from QOpenCVWidget
+ */
 void MyCameraWindow::invertClicked()
 {
     _invert = !_invert;
@@ -115,11 +127,20 @@ void MyCameraWindow::satureMClicked()
     _saturation -= 1;
 }
 
+/**
+ * invert filter
+ * src: the image to invert
+ */
 cv::Mat MyCameraWindow::invertFilter(const cv::Mat& src) const
 {
     return cv::Scalar::all(255) - src;
 }
 
+/**
+ * zoom filter
+ * src: the image to zoom on
+ * zoom: the value of the zoom
+ */
 cv::Mat MyCameraWindow::zoomFilter(const cv::Mat& src, const unsigned int zoom) const
 {
     unsigned int value = std::log(zoom)/std::log(2);
@@ -132,6 +153,11 @@ cv::Mat MyCameraWindow::zoomFilter(const cv::Mat& src, const unsigned int zoom) 
     return res;
 }
 
+/**
+ * balance filter
+ * src: the image to modify
+ * percent: the balance of r,g,b values
+ */
 cv::Mat MyCameraWindow::balanceFilter(const cv::Mat& src, const std::array<float,3>& percent)
 {
     assert(src.channels() == 3);
@@ -160,7 +186,11 @@ cv::Mat MyCameraWindow::balanceFilter(const cv::Mat& src, const std::array<float
     return out;
 }
 
-
+/**
+ * use clusterizeimage kmeans algorithm
+ * src: the image to modify
+ * nbClusters: the number of clusters
+ */
 cv::Mat MyCameraWindow::kmeans(const cv::Mat& src, unsigned int nbClusters)
 {
     srand (time(NULL));
@@ -168,7 +198,8 @@ cv::Mat MyCameraWindow::kmeans(const cv::Mat& src, unsigned int nbClusters)
     cv::Mat base = src;
     cv::Mat res(base.size(), CV_8UC3, cv::Scalar(0, 0, 0));
     std::vector<cv::Point> points;
-
+    
+    //Get all points
     for( int y = 0; y < base.rows; y++ )
         for( int x = 0; x < base.cols; x++ )
             if(base.at<char>(x,y) >= 100)
@@ -180,20 +211,27 @@ cv::Mat MyCameraWindow::kmeans(const cv::Mat& src, unsigned int nbClusters)
     ClusterizeImage clusterIm;
     clusterIm.kmeans(points, nbClusters, labels, 20, centers, base);
 
+    //create some colors
     std::vector<cv::Scalar> colors;
     for(unsigned int i = 0; i < nbClusters; ++i)
     {
         colors.push_back(cv::Scalar(rand()%255+1, rand()%255+1, rand()%255+1));
         circle(res, centers[i], 5, colors.at(i), 1);
     }
-
+    
+    //draw points
     for(unsigned int i = 0; i < points.size(); ++i)
         circle(res, points[i], 3, colors.at(labels[i]));
-
+    //write the out imaeg
     cv::imwrite("out.png", res);
     return res;
 }
 
+/**
+ * saturate filter
+ * src: the image to modify
+ * saturateValue: the saturation
+ */
 cv::Mat MyCameraWindow::saturate(const cv::Mat& src, const int saturateValue)
 {
     cv::Mat out;

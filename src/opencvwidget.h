@@ -11,7 +11,7 @@
 #include <QPushButton>
 
 /**
- * @brief The QOpenCVWidget class: The Interface
+ * @brief The QOpenCVWidget class: The GUI
  */
 class QOpenCVWidget : public QWidget {
     Q_OBJECT
@@ -38,6 +38,7 @@ public:
 
 
 public slots:
+    //When we click on buttons
     void invertSlot();
     void balanceSlot();
     void zoomPSlotl();

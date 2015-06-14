@@ -1,15 +1,20 @@
 #include "clusterizeimage.h"
 
 ClusterizeImage::ClusterizeImage()
-{
-
-}
+{}
 
 ClusterizeImage::~ClusterizeImage()
-{
+{}
 
-}
-
+/**
+ * kmeans algorithm
+ * @param points: all points
+ * @param nbCluster: the number of clusters
+ * @param labels: the label of each center
+ * @param iter: the number of iterations for the algorithm
+ * @param: centers: the center of each cluster
+ * @param img: the image to modify
+ */
 void ClusterizeImage::kmeans(const std::vector<cv::Point>& points, unsigned int nbCluster,
                                                                     std::vector<unsigned int>& labels, unsigned int iter,
                                                                     std::vector<cv::Point>& centers, const cv::Mat& img)

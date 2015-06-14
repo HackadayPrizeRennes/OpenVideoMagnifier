@@ -1,5 +1,6 @@
 #include "opencvwidget.h"
 
+//Init the GUI
 QOpenCVWidget::QOpenCVWidget(QWidget *parent) : QWidget(parent) {
     imagelabel = new QLabel;
 
@@ -39,9 +40,8 @@ QOpenCVWidget::QOpenCVWidget(QWidget *parent) : QWidget(parent) {
     setLayout(_mainLayout);
 }
 
-QOpenCVWidget::~QOpenCVWidget(void) {
-
-}
+QOpenCVWidget::~QOpenCVWidget(void) 
+{}
 
 void QOpenCVWidget::putImage(IplImage *cvimage) {
     int cvIndex, cvLineStart;
@@ -79,11 +79,13 @@ void QOpenCVWidget::putImage(IplImage *cvimage) {
     }
     imagelabel->setPixmap(QPixmap::fromImage(image).scaled(imagelabel->width(), imagelabel->height(), Qt::KeepAspectRatio));
 }
+
 QImage QOpenCVWidget::getImageLabel()
 {
     return imagelabel->pixmap()->toImage();
 }
 
+//When we click on buttons
 void QOpenCVWidget::invertSlot()
 {
     emit invertSignal();
