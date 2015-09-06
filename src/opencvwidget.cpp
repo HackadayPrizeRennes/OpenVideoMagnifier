@@ -6,42 +6,56 @@ QOpenCVWidget::QOpenCVWidget(QWidget *parent) : QWidget(parent) {
 
     _mainLayout = new QHBoxLayout;
     _controlLayout = new QVBoxLayout;
-        _invert = new QPushButton("Inverser");
-        _invert->setMaximumWidth(200);
+        _invert = new QPushButton();
+        _invert->setIcon(QIcon("rsc/invert.png"));
+        _invert->setIconSize(QSize(150,150));
+        _invert->setMaximumWidth(150);
         _controlLayout->addWidget(_invert);
         QObject::connect(_invert, SIGNAL(clicked()), this, SLOT(invertSlot()));
-        _balance = new QPushButton("Balance des blancs");
-        _balance->setMaximumWidth(200);
-        _controlLayout->addWidget(_balance);
-        QObject::connect(_balance, SIGNAL(clicked()), this, SLOT(balanceSlot()));
-        _zoomP = new QPushButton("Zoom x2");
-        _zoomP->setMaximumWidth(200);
+        _zoomP = new QPushButton();
+        _zoomP->setIcon(QIcon("rsc/zoomPlus.png"));
+        _zoomP->setIconSize(QSize(150,150));
+        _zoomP->setMaximumWidth(150);
         _controlLayout->addWidget(_zoomP);
         QObject::connect(_zoomP, SIGNAL(clicked()), this, SLOT(zoomPSlotl()));
-        _zoomM = new QPushButton("Zoom /2");
-        _zoomM->setMaximumWidth(200);
+        _zoomM = new QPushButton();
+        _zoomM->setIcon(QIcon("rsc/zoomMoins.png"));
+        _zoomM->setIconSize(QSize(150,150));
+        _zoomM->setMaximumWidth(150);
         _controlLayout->addWidget(_zoomM);
         QObject::connect(_zoomM, SIGNAL(clicked()), this, SLOT(zoomMSlot()));
-        _saturationP = new QPushButton("Saturation +1");
-        _saturationP->setMaximumWidth(200);
-        _controlLayout->addWidget(_saturationP);
-        QObject::connect(_saturationP, SIGNAL(clicked()), this, SLOT(saturationPSlot()));
-        _saturationM = new QPushButton("Saturation -1");
-        _saturationM->setMaximumWidth(200);
-        _controlLayout->addWidget(_saturationM);
-        QObject::connect(_saturationM, SIGNAL(clicked()), this, SLOT(saturationMSlot()));
-        _save = new QPushButton("Sauvegarde");
-        _save->setMaximumWidth(200);
+        _ocr = new QPushButton("");
+        _ocr->setIcon(QIcon("rsc/ocr.png"));
+        _ocr->setIconSize(QSize(150,150));
+        _ocr->setMaximumWidth(150);
+        _controlLayout->addWidget(_ocr);
+        QObject::connect(_ocr, SIGNAL(clicked()), this, SLOT(ocrSlot()));
+        _save = new QPushButton();
+        _save->setIcon(QIcon("rsc/save.png"));
+        _save->setIconSize(QSize(150,150));
+        _save->setMaximumWidth(150);
         _controlLayout->addWidget(_save);
         QObject::connect(_save, SIGNAL(clicked()), this, SLOT(saveSlot()));
 
     _mainLayout->addWidget(imagelabel);
     _mainLayout->addLayout(_controlLayout);
     setLayout(_mainLayout);
+    setStyleSheet("QPushButton {background:transparent;}");
 }
 
 QOpenCVWidget::~QOpenCVWidget(void) 
 {}
+
+void QOpenCVWidget::resizeEvent(QResizeEvent *event)
+{
+    int w = this->height()/5;
+
+    _invert->setIconSize(QSize(w,w));
+    _zoomM->setIconSize(QSize(w,w));
+    _zoomP->setIconSize(QSize(w,w));
+    _ocr->setIconSize(QSize(w,w));
+    _save->setIconSize(QSize(w,w));
+}
 
 void QOpenCVWidget::putImage(IplImage *cvimage) {
     int cvIndex, cvLineStart;
@@ -91,11 +105,6 @@ void QOpenCVWidget::invertSlot()
     emit invertSignal();
 }
 
-void QOpenCVWidget::balanceSlot()
-{
-    emit balanceSignal();
-}
-
 void QOpenCVWidget::zoomPSlotl()
 {
     emit zoomPSignal();
@@ -106,18 +115,12 @@ void QOpenCVWidget::zoomMSlot()
     emit zoomMSignal();
 }
 
-void QOpenCVWidget::saturationPSlot()
-{
-    emit saturationPSignal();
-}
-
-void QOpenCVWidget::saturationMSlot()
-{
-    emit saturationMSignal();
-}
-
 void QOpenCVWidget::saveSlot()
 {
     emit saveSignal();
 }
 
+void QOpenCVWidget::ocrSlot()
+{
+    emit ocrSignal();
+}

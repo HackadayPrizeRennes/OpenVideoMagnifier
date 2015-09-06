@@ -27,6 +27,7 @@ int main(int argc, char **argv) {
     //Launch the GUI
     QApplication app(argc, argv);
     MyCameraWindow *mainWin = new MyCameraWindow(camera);
+    mainWin->setWindowIcon(QIcon("rsc/icon.png"));
     mainWin->setWindowTitle("OpenVideoMagnifier");
     mainWin->showMaximized();
     int retval = app.exec();

@@ -5,8 +5,11 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
+#include <QProcess>
 
-MyCameraWindow::MyCameraWindow(CvCapture *cam, QWidget *parent) : QWidget(parent), _invert(false), _balance(true), _zoom(1), _saturation(0) {
+MyCameraWindow::MyCameraWindow(CvCapture *cam, QWidget *parent) : QWidget(parent), _invert(false), _balance(true),
+                                                                  _zoom(1), _saturation(0), _contrast(1.0), _rotate(0)
+{
     //load the config
     std::ifstream confFile("ovm.conf");
     if(confFile.is_open())
@@ -21,6 +24,8 @@ MyCameraWindow::MyCameraWindow(CvCapture *cam, QWidget *parent) : QWidget(parent
         if(_zoom < 1) _zoom = 1;
         std::getline(confFile,line);
         _saturation = std::atoi(line.c_str());
+        std::getline(confFile,line);
+        _rotate = std::atoi(line.c_str());
         confFile.close();
     }
 
@@ -34,10 +39,13 @@ MyCameraWindow::MyCameraWindow(CvCapture *cam, QWidget *parent) : QWidget(parent
     QObject::connect(cvwidget, SIGNAL(zoomPSignal()), this, SLOT(zoomPClicked()));
     QObject::connect(cvwidget, SIGNAL(saturationMSignal()), this, SLOT(satureMClicked()));
     QObject::connect(cvwidget, SIGNAL(saturationPSignal()), this, SLOT(saturePClicked()));
+    QObject::connect(cvwidget, SIGNAL(ocrSignal()), this, SLOT(saveCaptureClicked()));
     QObject::connect(cvwidget, SIGNAL(saveSignal()), this, SLOT(saveConfig()));
 
     //timer between each capture
     startTimer(100);
+
+    this->setStyleSheet("background-color: #12122e;");
 }
 
 /**
@@ -54,6 +62,7 @@ void MyCameraWindow::timerEvent(QTimerEvent*) {
         frame = invertFilter(frame);
     frame = saturate(frame, _saturation);
     frame = zoomFilter(frame,_zoom);
+    frame = rotateFilter(frame);
 
     IplImage* image2;
     image2 = cvCreateImage(cvSize(frame.cols,frame.rows),8,3);
@@ -89,6 +98,10 @@ void MyCameraWindow::keyPressEvent(QKeyEvent *event)
         _saturation = 0;
     if(event->key() == Qt::Key_M)
         zoomMClicked();
+    if(event->key() == Qt::Key_R)
+        rotateInc();
+    if(event->key() == Qt::Key_T)
+        rotateDec();
     if(event->key() == Qt::Key_S)
         saveConfig();
 }
@@ -246,6 +259,43 @@ cv::Mat MyCameraWindow::saturate(const cv::Mat& src, const int saturateValue)
     return out;
 }
 
+cv::Mat MyCameraWindow::contrastFilter(const cv::Mat& image)
+{
+    cv::Mat new_image = cv::Mat::zeros(image.size(),image.type());
+    for(int y = 0; y < image.rows; y++)
+        for(int x = 0; x < image.cols; x++)
+            for( int c = 0; c < 3; c++ )
+                new_image.at<cv::Vec3b>(y,x)[c] = cv::saturate_cast<uchar>(_contrast*(image.at<cv::Vec3b>(y,x)[c]));
+    return new_image;
+}
+
+cv::Mat MyCameraWindow::rotateFilter(const cv::Mat& image)
+{
+    cv::Mat out;
+    cv::Point2f pt(image.cols/2., image.rows/2.);
+    cv::Mat r = cv::getRotationMatrix2D(pt, _rotate, 1.0);
+
+    //if(_rotate == 0 || _rotate == 180)
+      cv::warpAffine(image, out, r, cv::Size(image.cols, image.rows));
+    //else
+      //cv::warpAffine(image, out, r, cv::Size(image.rows, image.cols));
+    return out;
+}
+
+
+void MyCameraWindow::rotateInc()
+{
+    _rotate += 90;
+    _rotate %= 360;
+}
+
+
+void MyCameraWindow::rotateDec()
+{
+    _rotate -= 90;
+    _rotate %= 360;
+}
+
 
 void MyCameraWindow::saveConfig()
 {
@@ -254,6 +304,21 @@ void MyCameraWindow::saveConfig()
     configFile << _invert << std::endl
                << _balance << std::endl
                << _zoom << std::endl
-               << _saturation << std::endl;
+               << _saturation << std::endl
+               << _rotate << std::endl;
     configFile.close();
+}
+
+void MyCameraWindow::saveCaptureClicked()
+{
+    IplImage *image=cvQueryFrame(camera);
+    cv::Mat frame(image);
+    frame = contrastFilter(frame);
+    cv::imwrite("ocr.png", frame);
+    //TODO: get text zone
+    //TODO hiera zones
+    //TODO correct ocr
+    //TODO configure
+    QProcess::execute("gocr ocr.png -o gocrOutput");
+    QProcess::startDetached("espeak -f gocrOutput -vfr+f4");
 }

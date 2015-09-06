@@ -21,11 +21,9 @@ private:
     QVBoxLayout *_controlLayout;
 
     QPushButton *_invert;
-    QPushButton *_balance;
     QPushButton *_zoomP;
     QPushButton *_zoomM;
-    QPushButton *_saturationP;
-    QPushButton *_saturationM;
+    QPushButton *_ocr;
     QPushButton *_save;
 
     QImage image;
@@ -36,24 +34,22 @@ public:
     void putImage(IplImage *);
     QImage getImageLabel();
 
+protected:
+    void resizeEvent(QResizeEvent* event);
 
 public slots:
     //When we click on buttons
     void invertSlot();
-    void balanceSlot();
     void zoomPSlotl();
     void zoomMSlot();
-    void saturationPSlot();
-    void saturationMSlot();
+    void ocrSlot();
     void saveSlot();
 
 signals:
     void invertSignal();
-    void balanceSignal();
     void zoomPSignal();
     void zoomMSignal();
-    void saturationPSignal();
-    void saturationMSignal();
+    void ocrSignal();
     void saveSignal();
 };
 

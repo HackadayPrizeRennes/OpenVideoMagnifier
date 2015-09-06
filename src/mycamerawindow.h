@@ -32,6 +32,8 @@ class MyCameraWindow : public QWidget
         bool _balance;
         unsigned int _zoom;
         int _saturation;
+        double _contrast;
+        int _rotate;
 
     public:
         MyCameraWindow(CvCapture *cam, QWidget *parent=0);
@@ -66,6 +68,10 @@ class MyCameraWindow : public QWidget
          */
         cv::Mat saturate(const cv::Mat& src, const int saturateValue);
 
+        cv::Mat contrastFilter(const cv::Mat& image);
+
+        cv::Mat rotateFilter(const cv::Mat& image);
+
     public slots:
         //If the class receives some signals from QOpenCVWidget
         void invertClicked();
@@ -74,6 +80,9 @@ class MyCameraWindow : public QWidget
         void balanceClicked();
         void saturePClicked();
         void satureMClicked();
+        void rotateInc();
+        void rotateDec();
+        void saveCaptureClicked();
         void saveConfig();
 
     protected:
