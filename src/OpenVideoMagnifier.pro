@@ -64,9 +64,11 @@ SOURCES += \
     main.cpp \
     mycamerawindow.cpp \
     opencvwidget.cpp \
-    clusterizeimage.cpp
+    clusterizeimage.cpp \
+    ocrthread.cpp
 
 HEADERS += \
     mycamerawindow.h \
     opencvwidget.h \
-    clusterizeimage.h
+    clusterizeimage.h \
+    ocrthread.h

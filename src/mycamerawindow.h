@@ -14,6 +14,7 @@
 
 #include "opencvwidget.h"
 #include "clusterizeimage.h"
+#include "ocrthread.h"
 
 /**
  * @brief The MyCameraWindow class
@@ -34,9 +35,11 @@ class MyCameraWindow : public QWidget
         int _saturation;
         double _contrast;
         int _rotate;
+        OCRThread _ocr;
 
     public:
         MyCameraWindow(CvCapture *cam, QWidget *parent=0);
+        ~MyCameraWindow();
 
         /**
          * invert the image

@@ -51,6 +51,9 @@ signals:
     void zoomMSignal();
     void ocrSignal();
     void saveSignal();
+    void balanceSignal();
+    void saturationMSignal();
+    void saturationPSignal();
 };
 
 #endif

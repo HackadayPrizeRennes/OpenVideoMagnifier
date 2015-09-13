@@ -13,8 +13,11 @@ else:
     ATD.setDefaultKey("OpenVideoMagnifier")
     errors = ATD.checkDocument(toCorrect)
     correction = toCorrect
-    for error in errors:
-        correction = correction.replace(error.string, error.suggestions[0],1)
+    try:
+        for error in errors:
+            correction = correction.replace(error.string, error.suggestions[0],1)
+    except IndexError:
+        pass
     print("Output : " + correction)
     toCorrectFile.close()
     toCorrectFile = open(f, 'w')

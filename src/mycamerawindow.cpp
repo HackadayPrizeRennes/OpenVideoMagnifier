@@ -5,10 +5,11 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
-#include <QProcess>
+#include <ocrthread.h>
 
 MyCameraWindow::MyCameraWindow(CvCapture *cam, QWidget *parent) : QWidget(parent), _invert(false), _balance(true),
-                                                                  _zoom(1), _saturation(0), _contrast(1.0), _rotate(0)
+                                                                  _zoom(1), _saturation(0), _contrast(1.0), _rotate(0),
+                                                                  _ocr()
 {
     //load the config
     std::ifstream confFile("ovm.conf");
@@ -46,6 +47,11 @@ MyCameraWindow::MyCameraWindow(CvCapture *cam, QWidget *parent) : QWidget(parent
     startTimer(100);
 
     this->setStyleSheet("background-color: #12122e;");
+}
+
+MyCameraWindow::~MyCameraWindow()
+{
+    _ocr.quit();
 }
 
 /**
@@ -319,6 +325,9 @@ void MyCameraWindow::saveCaptureClicked()
     //TODO hiera zones
     //TODO correct ocr
     //TODO configure
-    QProcess::execute("gocr ocr.png -o gocrOutput");
-    QProcess::startDetached("espeak -f gocrOutput -vfr+f4");
+    if(_ocr.isRunning())
+    {
+        _ocr.quit();
+    }
+    _ocr.start();
 }
