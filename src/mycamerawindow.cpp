@@ -9,7 +9,7 @@
 
 MyCameraWindow::MyCameraWindow(CvCapture *cam, QWidget *parent) : QWidget(parent), _invert(false), _balance(true),
                                                                   _zoom(1), _saturation(0), _contrast(1.0), _rotate(0),
-                                                                  _ocr()
+                                                                  _ocr(), _freeze(false)
 {
     //load the config
     std::ifstream confFile("ovm.conf");
@@ -58,6 +58,7 @@ MyCameraWindow::~MyCameraWindow()
  * refresh the QOpenCVWidget
  */
 void MyCameraWindow::timerEvent(QTimerEvent*) {
+  if(!_freeze) {
     IplImage *image=cvQueryFrame(camera);
     cv::Mat frame(image);
 
@@ -75,6 +76,7 @@ void MyCameraWindow::timerEvent(QTimerEvent*) {
     IplImage ipltemp=frame;
     cvCopy(&ipltemp,image2);
     cvwidget->putImage(image2);
+  }
 }
 
 /**
@@ -108,6 +110,8 @@ void MyCameraWindow::keyPressEvent(QKeyEvent *event)
         rotateInc();
     if(event->key() == Qt::Key_T)
         rotateDec();
+    if(event->key() == Qt::Key_W)
+        _freeze = !_freeze;
     if(event->key() == Qt::Key_S)
         saveConfig();
 }

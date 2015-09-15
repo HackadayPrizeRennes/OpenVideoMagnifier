@@ -35,6 +35,7 @@ class MyCameraWindow : public QWidget
         int _saturation;
         double _contrast;
         int _rotate;
+        bool _freeze;
         OCRThread _ocr;
 
     public:
