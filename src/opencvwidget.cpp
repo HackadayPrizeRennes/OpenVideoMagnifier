@@ -40,7 +40,7 @@ QOpenCVWidget::QOpenCVWidget(QWidget *parent) : QWidget(parent) {
     _mainLayout->addWidget(imagelabel);
     _mainLayout->addLayout(_controlLayout);
     setLayout(_mainLayout);
-    setStyleSheet("QPushButton {background:transparent;}");
+    setStyleSheet("QPushButton {background:transparent;}     QPushButton:focus {border: none;outline: none;}");
 }
 
 QOpenCVWidget::~QOpenCVWidget(void) 

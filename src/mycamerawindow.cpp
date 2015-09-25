@@ -9,7 +9,7 @@
 
 MyCameraWindow::MyCameraWindow(CvCapture *cam, QWidget *parent) : QWidget(parent), _invert(false), _balance(true),
                                                                   _zoom(1), _saturation(0), _contrast(1.0), _rotate(0),
-                                                                  _ocr(), _freeze(false)
+                                                                  _ocr(), _freeze(false), _fullscreen(false)
 {
     //load the config
     std::ifstream confFile("ovm.conf");
@@ -114,6 +114,8 @@ void MyCameraWindow::keyPressEvent(QKeyEvent *event)
         _freeze = !_freeze;
     if(event->key() == Qt::Key_S)
         saveConfig();
+    if(event->key() == Qt::Key_F11)
+        fullscreen();
 }
 
 /**
@@ -334,4 +336,14 @@ void MyCameraWindow::saveCaptureClicked()
         _ocr.quit();
     }
     _ocr.start();
+}
+
+
+void MyCameraWindow::fullscreen()
+{
+    if(!_fullscreen)
+        this->showFullScreen();
+    else
+        this->showMaximized();
+    _fullscreen = !_fullscreen;
 }

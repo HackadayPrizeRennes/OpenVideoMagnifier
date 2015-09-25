@@ -37,6 +37,7 @@ class MyCameraWindow : public QWidget
         int _rotate;
         bool _freeze;
         OCRThread _ocr;
+        bool _fullscreen;
 
     public:
         MyCameraWindow(CvCapture *cam, QWidget *parent=0);
@@ -75,6 +76,8 @@ class MyCameraWindow : public QWidget
         cv::Mat contrastFilter(const cv::Mat& image);
 
         cv::Mat rotateFilter(const cv::Mat& image);
+
+        void fullscreen();
 
     public slots:
         //If the class receives some signals from QOpenCVWidget
